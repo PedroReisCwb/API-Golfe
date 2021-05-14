@@ -10,7 +10,7 @@ export default class Buraco extends BaseSchema {
       table.integer('numero_buraco').notNullable()
       table.string('descricao', 100).notNullable()
       table.string('status', 1).notNullable()
-      table.dateTime('dt_status').notNullable()
+      table.dateTime('dt_status').defaultTo(this.now())
     })
   }
 

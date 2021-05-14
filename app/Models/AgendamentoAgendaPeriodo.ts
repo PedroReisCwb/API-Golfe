@@ -3,6 +3,8 @@ import { BaseModel, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import AgendamentoSituacao from './AgendamentoSituacao'
 
 export default class AgendamentoAgendaPeriodo extends BaseModel {
+  public static table = 'AGENDAMENTO_GLF_AGENDA_PERIODO'
+
   @column({ isPrimary: true })
   public id: number
 

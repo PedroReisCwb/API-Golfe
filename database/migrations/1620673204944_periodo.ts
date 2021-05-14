@@ -12,7 +12,7 @@ export default class Periodo extends BaseSchema {
       table.dateTime('data_fim').notNullable()
       table.dateTime('data_hora_liberacao').notNullable()
       table.string('status', 1).notNullable()
-      table.dateTime('dt_status').notNullable()
+      table.dateTime('dt_status').defaultTo(this.now())
     })
   }
 

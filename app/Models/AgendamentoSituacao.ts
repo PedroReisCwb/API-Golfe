@@ -2,6 +2,8 @@ import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 
 export default class AgendamentoSituacao extends BaseModel {
+  public static table = 'AGENDAMENTO_GLF_SITUACAO'
+
   @column({ isPrimary: true })
   public id: number
 

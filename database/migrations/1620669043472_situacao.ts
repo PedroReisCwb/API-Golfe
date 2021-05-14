@@ -8,7 +8,7 @@ export default class Situacao extends BaseSchema {
       table.increments('id').primary()
       table.string('descricao', 100).notNullable()
       table.string('status', 1).notNullable()
-      table.dateTime('dt_status').notNullable()
+      table.dateTime('dt_status').defaultTo(this.now())
     })
   }
 

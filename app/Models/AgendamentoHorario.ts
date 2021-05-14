@@ -4,11 +4,13 @@ import AgendamentoAgendaPeriodo from './AgendamentoAgendaPeriodo'
 import AgendamentoSituacao from './AgendamentoSituacao'
 
 export default class AgendamentoHorario extends BaseModel {
+  public static table = 'AGENDAMENTO_GLF_HORARIO'
+
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public id_agendamento_agenda_periodo: number
+  public id_agendamento_agenda: number
 
   @column()
   public id_agendamento_situacao: number

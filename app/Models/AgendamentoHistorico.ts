@@ -7,17 +7,22 @@ import AgendamentoHorario from './AgendamentoHorario'
 import AgendamentoJogador from './AgendamentoJogador'
 
 export default class AgendamentoHistorico extends BaseModel {
+  public static table = 'AGENDAMENTO_GLF_HISTORICO'
+
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public id_agendamento_agenda_periodo: number
+  public id_agendamento_historico: number
+
+  @column()
+  public id_agendamento_agenda: number
 
   @column()
   public id_agendamento_buraco: number
 
   @column()
-  public id_agendamento_tipo_equipe: number
+  public id_agendamento_equipe: number
 
   @column()
   public id_agendamento_horario: number

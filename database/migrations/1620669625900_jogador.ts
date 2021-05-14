@@ -13,7 +13,7 @@ export default class Jogador extends BaseSchema {
       table.integer('num_dep', 1).notNullable()
       table.string('nome', 70).notNullable()
       table.string('status', 1).notNullable()
-      table.dateTime('dt_status').notNullable()
+      table.dateTime('dt_status').defaultTo(this.now())
     })
   }
 

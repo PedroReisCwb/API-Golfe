@@ -1,193 +1,122 @@
 import Route from '@ioc:Adonis/Core/Route'
-import Database from '@ioc:Adonis/Lucid/Database'
+
+Route.get('/', () => {
+  return '<BR><BR><BR><CENTER><FONT COLOR="GREEN"><H1>CLUBE CURITIBANO <BR><BR> API AGENDMENTO GOLFE</FONT></H1></CENTER>'
+})
 
 Route.group(() => {
   Route.group(() => {
 
-    // HISTÓRICO
+    // AGENDA PERÍODO
     Route.group(() => {
+      // Rota para buscar todas as agendas
+      Route.get('/','AgendamentoAgendaPeriodoController.buscar')
+      // Rota para criar uma agenda
+      Route.post('/','AgendamentoAgendaPeriodoController.criar')
+      // Rota para atualizar uma agenda
+      Route.put(':id','AgendamentoAgendaPeriodoController.atualizar')
+    }).prefix('/agenda')
+
+    // RESTRIÇÃO
+    Route.group(() => {
+      // Rota para buscar todas as restrições
+      Route.get('/','AgendamentoRestricaoController.buscar')
+      // Rota para criar uma restrição
+      Route.post('/','AgendamentoRestricaoController.criar')
+      // Rota para atualizar uma restrição
+      Route.put(':id','AgendamentoRestricaoController.atualizar')
+    }).prefix('/restricao')
+
+    // CONVIDADO
+    Route.group(() => {
+      // Rota para buscar todos os convidados
+      Route.get('/','AgendamentoConvidadoController.buscar')
+      // Rota para criar um convidado
+      Route.post('/','AgendamentoConvidadoController.criar')
+      // Rota para atualizar um convidado
+      Route.put(':id','AgendamentoConvidadoController.atualizar')
+    }).prefix('/convidado')
+
+    // BURACO
+    Route.group(() => {
+      // Rota para buscar todos os buracos
+      Route.get('/','AgendamentoBuracoController.buscar')
+      // Rota para criar um buraco
+      Route.post('/','AgendamentoBuracoController.criar')
+      // Rota para atualizar um buraco
+      Route.put(':id','AgendamentoBuracoController.atualizar')
+    }).prefix('/buraco')
+
+    // HORÁRIO
+    Route.group(() => {
+      // Rota para buscar todos os horários
+      Route.get('/','AgendamentoHorarioController.buscar')
+      // Rota para criar um horário
+      Route.post('/','AgendamentoHorarioController.criar')
+      // Rota para atualizar um horário
+      Route.put(':id','AgendamentoHorarioController.atualizar')
+    }).prefix('/horario')
+
+    // EQUIPE
+    Route.group(() => {
+      // Rota para buscar todas as equipes
+      Route.get('/','AgendamentoTipoEquipeController.buscar')
+      // Rota para criar uma equipe
+      Route.post('/','AgendamentoTipoEquipeController.criar')
+      // Rota para atualizar uma equipe
+      Route.put(':id','AgendamentoTipoEquipeController.atualizar')
+    }).prefix('/equipe')
+
+    // JOGADOR
+    Route.group(() => {
+      // Rota para buscar todos os jogadores
+      Route.get('/','AgendamentoJogadorController.buscar')
+      // Rota para criar um jogador
+      Route.post('/','AgendamentoJogadorController.criar')
+      // Rota para atualizar um jogador
+      Route.put(':id','AgendamentoJogadorController.atualizar')
+    }).prefix('/jogador')
+
+    // SITUACAO
+    Route.group(() => {
+      // Rota para buscar todas as situações
+      Route.get('/','AgendamentoSituacaoController.buscar')
+      // Rota para criar uma situação
+      Route.post('/','AgendamentoSituacaoController.criar')
+      // Rota para atualizar uma situação
+      Route.put(':id','AgendamentoSituacaoController.atualizar')
+    }).prefix('/situacao')
+
+    // HISTÓRICO
+    Route.group(() =>{
+      // Rota para buscar todos os históricos
+      Route.get('/','AgendamentoHistoricoController.buscar')
+      // Rota para criar um histórico
+      Route.post('/','AgendamentoHistoricoController.criar')
+      // Rota para atualizar um histórico
+      Route.put(':id','AgendamentoHistoricoController.atualizar')
       // Rota para buscar dados do próximo jogo do Jogador pelo ID
-      Route.get('proximo/:id', async ({ response, params }) => {
-        const proximo = await Database.rawQuery(`SELECT TOP 1 ahis.data_reserva, ah.horario, ae.descricao, ab.numero_buraco FROM AGENDAMENTO_HISTORICO ahis
-          INNER JOIN AGENDAMENTO_HORARIO ah ON ahis.id_agendamento_horario = ah.id
-          INNER JOIN AGENDAMENTO_EQUIPE ae ON ahis.id_agendamento_equipe = ae.id
-          INNER JOIN AGENDAMENTO_BURACO ab ON ahis.id_agendamento_buraco = ab.id
-          WHERE ahis.id_agendamento_jogador=${params.id}
-          AND CAST(ah.horario AS time) > CAST(GETDATE() AS time)
-          AND CAST(ahis.data_reserva AS date) >= CAST(GETDATE() AS date)
-          AND ahis.status <> 'E'
-          AND ab.status <> 'E'
-          AND ae.status <> 'E'
-          AND ah.status <> 'E'
-          ORDER BY ahis.data_reserva desc, ah.horario asc`)
-
-        return response.json({
-          status: true,
-          data: proximo
-        })
-      })
-
+      Route.get('/proximo/:id','AgendamentoHistoricoController.proximoJogo')
       // Rota para buscar dados de uma reserva pelo ID do Historico de reserva
-      Route.get(':id', async ({ response, params }) => {
-        const jogadores = (await Database.query()
-          .select('AGENDAMENTO_JOGADOR.id', 'AGENDAMENTO_JOGADOR.nome')
-          .from('AGENDAMENTO_JOGADOR')
-          .where('AGENDAMENTO_HISTORICO.id_agendamento_historico', params.id)
-          .innerJoin('AGENDAMENTO_HISTORICO', 'AGENDAMENTO_HISTORICO.id_agendamento_jogador', 'AGENDAMENTO_JOGADOR.id'))
-
-        const historico = (await Database.query()
-          .select('AGENDAMENTO_HISTORICO.id',
-                  'AGENDAMENTO_HISTORICO.data_reserva as data',
-                  'AGENDAMENTO_HORARIO.horario',
-                  'AGENDAMENTO_BURACO.numero_buraco as tee_saida')
-          .from('AGENDAMENTO_HISTORICO')
-          .where('AGENDAMENTO_HISTORICO.id', params.id)
-          .andWhereNot('AGENDAMENTO_HISTORICO.status','E')
-          .andWhereNot('AGENDAMENTO_HORARIO.status','E')
-          .andWhereNot('AGENDAMENTO_BURACO.status','E')
-          .andWhereNot('AGENDAMENTO_AGENDA_PERIODO.status','E')
-          .innerJoin('AGENDAMENTO_AGENDA_PERIODO', 'AGENDAMENTO_HISTORICO.id_agendamento_agenda', 'AGENDAMENTO_AGENDA_PERIODO.id')
-          .innerJoin('AGENDAMENTO_HORARIO', 'AGENDAMENTO_HISTORICO.id_agendamento_horario', 'AGENDAMENTO_HORARIO.id')
-          .innerJoin('AGENDAMENTO_BURACO', 'AGENDAMENTO_HISTORICO.id_agendamento_buraco', 'AGENDAMENTO_BURACO.id')
-          .limit(7))
-
-        historico[0].jogadores = jogadores
-
-        return response.json({
-          status: true,
-          data: historico[0]
-        })
-      })
-
+      Route.get(':id','AgendamentoHistoricoController.buscarHistorico')
       // Rota para buscar dados de uma reserva pelo ID do Jodador
-      Route.get('jogador/:id', async ({ response, params }) => {
-        const historico = (await Database.query()
-          .select('AGENDAMENTO_HISTORICO.id',
-                  'AGENDAMENTO_HISTORICO.data_reserva as data',
-                  'AGENDAMENTO_HORARIO.horario',
-                  'AGENDAMENTO_BURACO.numero_buraco as tee_saida')
-          .from('AGENDAMENTO_HISTORICO')
-          .where('AGENDAMENTO_HISTORICO.id_agendamento_jogador', params.id)
-          .andWhereNot('AGENDAMENTO_HISTORICO.status','E')
-          .andWhereNot('AGENDAMENTO_HORARIO.status','E')
-          .andWhereNot('AGENDAMENTO_BURACO.status','E')
-          .andWhereNot('AGENDAMENTO_AGENDA_PERIODO.status','E')
-          .innerJoin('AGENDAMENTO_AGENDA_PERIODO', 'AGENDAMENTO_HISTORICO.id_agendamento_agenda', 'AGENDAMENTO_AGENDA_PERIODO.id')
-          .innerJoin('AGENDAMENTO_HORARIO', 'AGENDAMENTO_HISTORICO.id_agendamento_horario', 'AGENDAMENTO_HORARIO.id')
-          .innerJoin('AGENDAMENTO_BURACO', 'AGENDAMENTO_HISTORICO.id_agendamento_buraco', 'AGENDAMENTO_BURACO.id')
-          .limit(7))
-
-        for (const key in historico) {
-          if (Object.prototype.hasOwnProperty.call(historico, key)) {
-            const item = historico[key];
-
-            historico[key].jogadores  = (await Database.query()
-              .select('AGENDAMENTO_JOGADOR.id', 'AGENDAMENTO_JOGADOR.nome')
-              .from('AGENDAMENTO_JOGADOR')
-              .where('AGENDAMENTO_HISTORICO.id_agendamento_historico', item.id)
-              .innerJoin('AGENDAMENTO_HISTORICO', 'AGENDAMENTO_HISTORICO.id_agendamento_jogador', 'AGENDAMENTO_JOGADOR.id'))
-            }
-        }
-
-        return response.json({
-          status: true,
-          data: historico
-        })
-      })
-
+      Route.get('/jogador/:id','AgendamentoHistoricoController.buscarHistoricoJogador')
       // Rota para gravar reserva do Jogador (Hoje / Amanhã)
-      Route.post('gravar/:dia', async ({request, response, params}) => {
-
-        const gravar = await Database.rawQuery(``)
-
-        return response.json({
-          status: true,
-          data: request.toJSON().body.ids_jogadores,
-          dia: params.dia
-        })
-      })
+      Route.post('/gravar/:dia','AgendamentoHistoricoController.gravar')
     }).prefix('/historico')
 
     // CONFIGURAÇÃO
-    Route.group(() => {
-
+    Route.group(() =>{
+      // Rota para buscar todas as configurações
+      Route.get('/','AgendamentoConfiguracaoController.buscar')
+      // Rota para criar uma configuração
+      Route.post('/','AgendamentoConfiguracaoController.criar')
+      // Rota para atualizar uma configuração
+      Route.put(':id','AgendamentoConfiguracaoController.atualizar')
       // Rota para buscar todos os horários a partir da hora atual
-
-      Route.get(':id', async ({response , params}) => {
-
-        const agenda = await Database.rawQuery(`DECLARE @id_agendamento_agenda INT = ${params.id}
-          SELECT AH.ID,ah.horario, ab.numero_buraco, ISNULL(ae.descricao,'') equipe
-              , CASE WHEN HIST.ID_HISTORICO IS NULL THEN 'L' ELSE HIST.status END situacao
-              , ISNULL([AS].descricao,'Livre') situacao_agendamento
-              , ISNULL(HIST.QTDE_JOGADORES,0) qtde_jogadores
-              , ISNULL(AE.limite_qtde,0) limite_equipe
-          FROM AGENDAMENTO_CONFIGURACAO ac
-          INNER JOIN AGENDAMENTO_HORARIO ah ON ah.id_agendamento_agenda = ac.id
-          INNER JOIN AGENDAMENTO_BURACO ab ON ac.id_agendamento_buraco = ab.id
-          LEFT JOIN (SELECT AH1.id_agendamento_horario
-                , MIN(ah1.ID) ID_HISTORICO
-                , MIN(AH1.status) STATUS
-                , COUNT(*) QTDE_JOGADORES
-                FROM AGENDAMENTO_HISTORICO ah1
-                  LEFT JOIN AGENDAMENTO_HISTORICO AHJ ON AHJ.id_agendamento_historico = AH1.id
-                WHERE  ah1.id_agendamento_agenda = @id_agendamento_agenda
-                  AND CAST(ah1.data_reserva AS date) = CONVERT(DATE, GETDATE())
-                  AND AH1.STATUS <> 'E'
-                GROUP BY AH1.id_agendamento_horario
-                ) HIST ON HIST.id_agendamento_horario = ah.id
-          LEFT JOIN AGENDAMENTO_HISTORICO HIST_AGENDAMENTO ON HIST_AGENDAMENTO.id = HIST.ID_HISTORICO
-          LEFT JOIN AGENDAMENTO_EQUIPE ae ON AE.ID = HIST_AGENDAMENTO.id_agendamento_equipe
-          LEFT JOIN AGENDAMENTO_SITUACAO [AS] ON [AS].status = HIST_AGENDAMENTO.status
-          WHERE ac.status <> 'E'
-          AND ah.status <> 'E'
-          AND ah.id_agendamento_agenda = @id_agendamento_agenda
-          and hist.ID_HISTORICO is not null`)
-
-        return response.json({
-          status: true,
-          data: agenda
-        })
-      })
-
+      Route.get(':id','AgendamentoConfiguracaoController.buscarHorarios')
       // Rota para buscar todos os horários por equipe (Hoje / Amanhã)
-      Route.get(':equipe/:dia/:id', async ({response , params}) => {
-
-        const diaParam = params.dia == 'hoje' ? 'GETDATE()' : 'GETDATE()+1';
-
-        const agenda = await Database.rawQuery(`DECLARE @id_agendamento_agenda INT = ${params.id}
-          SELECT AH.ID,ah.horario, ab.numero_buraco, ISNULL(ae.descricao,'') equipe
-              , CASE WHEN HIST.ID_HISTORICO IS NULL THEN 'L' ELSE HIST.status END situacao
-              , ISNULL([AS].descricao,'Livre') situacao_agendamento
-              , ISNULL(HIST.QTDE_JOGADORES,0) qtde_jogadores
-              , ISNULL(AE.limite_qtde,0) limite_equipe
-          FROM AGENDAMENTO_CONFIGURACAO ac
-          INNER JOIN AGENDAMENTO_HORARIO ah ON ah.id_agendamento_agenda = ac.id
-          INNER JOIN AGENDAMENTO_BURACO ab ON ac.id_agendamento_buraco = ab.id
-          LEFT JOIN (SELECT AH1.id_agendamento_horario
-                , MIN(ah1.ID) ID_HISTORICO
-                , MIN(AH1.status) STATUS
-                , COUNT(*) QTDE_JOGADORES
-                FROM AGENDAMENTO_HISTORICO ah1
-                  LEFT JOIN AGENDAMENTO_HISTORICO AHJ ON AHJ.id_agendamento_historico = AH1.id
-                  LEFT JOIN AGENDAMENTO_EQUIPE AEJ on AEJ.id = ah1.id_agendamento_equipe
-                WHERE  ah1.id_agendamento_agenda = @id_agendamento_agenda
-                  AND CAST(ah1.data_reserva AS date) = CONVERT(DATE, ${diaParam})
-                  AND AH1.STATUS <> 'E'
-                  and AEJ.descricao = '${params.equipe}'
-                GROUP BY AH1.id_agendamento_horario
-                ) HIST ON HIST.id_agendamento_horario = ah.id
-          LEFT JOIN AGENDAMENTO_HISTORICO HIST_AGENDAMENTO ON HIST_AGENDAMENTO.id = HIST.ID_HISTORICO
-          LEFT JOIN AGENDAMENTO_EQUIPE ae ON AE.ID = HIST_AGENDAMENTO.id_agendamento_equipe
-          LEFT JOIN AGENDAMENTO_SITUACAO [AS] ON [AS].status = HIST_AGENDAMENTO.status
-          WHERE ac.status <> 'E'
-          AND ah.status <> 'E'
-          AND ah.id_agendamento_agenda = @id_agendamento_agenda`)
-
-        return response.json({
-          status: true,
-          data: agenda
-        })
-      })
+      Route.get(':equipe/:dia/:id','AgendamentoConfiguracaoController.buscarHorariosEquipe')
     }).prefix('/configuracao')
 
   }).prefix('/golfe')

@@ -10,7 +10,7 @@ export default class Equipe extends BaseSchema {
       table.integer('limite_qtde', 2)
       table.string('descricao', 100).notNullable()
       table.string('status', 1).notNullable()
-      table.dateTime('dt_status').notNullable()
+      table.dateTime('dt_status').defaultTo(this.now())
     })
   }
 

@@ -6,11 +6,11 @@ export default class Horario extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
-      table.integer('id_agendamento_agenda_periodo').unsigned().references('id').inTable('AGENDAMENTO_GLF_AGENDA_PERIODO')
+      table.integer('id_agendamento_agenda').unsigned().references('id').inTable('AGENDAMENTO_GLF_AGENDA_PERIODO')
       table.integer('id_agendamento_situacao').unsigned().references('id').inTable('AGENDAMENTO_GLF_SITUACAO')
       table.string('horario', 5).notNullable()
       table.string('status', 1).notNullable()
-      table.dateTime('dt_status').notNullable()
+      table.dateTime('dt_status').defaultTo(this.now())
     })
   }
 

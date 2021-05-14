@@ -9,7 +9,7 @@ export default class Convidado extends BaseSchema {
       table.integer('id_agendamento_historico').unsigned().references('id').inTable('AGENDAMENTO_GLF_HISTORICO')
       table.string('nome', 70).notNullable()
       table.string('status', 1).notNullable()
-      table.dateTime('dt_status').notNullable()
+      table.dateTime('dt_status').defaultTo(this.now())
     })
   }
 

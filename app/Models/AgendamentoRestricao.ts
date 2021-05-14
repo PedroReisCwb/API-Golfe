@@ -4,8 +4,16 @@ import AgendamentoAgendaPeriodo from './AgendamentoAgendaPeriodo'
 import AgendamentoSituacao from './AgendamentoSituacao'
 
 export default class AgendamentoRestricao extends BaseModel {
+  public static table = 'AGENDAMENTO_GLF_RESTRICAO'
+
   @column({ isPrimary: true })
   public id: number
+
+  @column()
+  public id_agendamento_agenda: number
+
+  @column()
+  public id_agendamento_situacao: number
 
   @column.dateTime()
   public data_inicio: DateTime

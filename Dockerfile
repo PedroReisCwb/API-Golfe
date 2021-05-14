@@ -7,4 +7,4 @@ COPY package*.json ./
 
 COPY . .
 
-EXPOSE 3000:3000
+EXPOSE 3333:3333

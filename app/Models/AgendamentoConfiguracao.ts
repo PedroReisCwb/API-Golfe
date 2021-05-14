@@ -3,23 +3,21 @@ import { BaseModel, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import AgendamentoAgendaPeriodo from './AgendamentoAgendaPeriodo'
 import AgendamentoBuraco from './AgendamentoBuraco'
 import AgendamentoTipoEquipe from './AgendamentoTipoEquipe'
-import AgendamentoHorario from './AgendamentoHorario'
 
 export default class AgendamentoConfiguracao extends BaseModel {
+  public static table = 'AGENDAMENTO_GLF_CONFIGURACAO'
+
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public id_agendamento_agenda_periodo: number
+  public id_agendamento_agenda: number
 
   @column()
   public id_agendamento_buraco: number
 
   @column()
-  public id_agendamento_tipo_equipe: number
-
-  @column()
-  public id_agendamento_horario: number
+  public id_agendamento_equipe: number
 
   @column()
   public status: string
@@ -41,9 +39,4 @@ export default class AgendamentoConfiguracao extends BaseModel {
     foreignKey: 'id_agendamento_tipo_equipe',
   })
   public equipe: HasOne<typeof AgendamentoTipoEquipe>
-
-  @hasOne(() => AgendamentoHorario, {
-    foreignKey: 'id_agendamento_horario',
-  })
-  public horario: HasOne<typeof AgendamentoHorario>
 }

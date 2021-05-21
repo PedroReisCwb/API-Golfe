@@ -4,7 +4,7 @@ import AgendamentoJogador from "App/Models/AgendamentoJogador";
 
 export default class AgendamentoJogadorController {
   public async buscar() {
-    const jogadores = await AgendamentoJogador.all();
+    const jogadores = await AgendamentoJogador.query().orderBy('id','asc');
     return jogadores;
   }
 

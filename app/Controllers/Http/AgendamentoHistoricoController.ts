@@ -35,7 +35,7 @@ export default class AgendamentoHistoricoController {
       AND ah.status <> 'E'
       ORDER BY ahis.data_reserva desc, ah.horario asc`)
 
-    return response.json(proximo)
+    return response.json(proximo[0])
   }
 
   public async buscarHistorico({ response, params }) {

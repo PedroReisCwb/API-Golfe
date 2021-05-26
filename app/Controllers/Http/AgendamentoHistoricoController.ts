@@ -97,6 +97,7 @@ export default class AgendamentoHistoricoController {
       .innerJoin('AGENDAMENTO_GLF_AGENDA_PERIODO', 'AGENDAMENTO_GLF_HISTORICO.id_agendamento_agenda', 'AGENDAMENTO_GLF_AGENDA_PERIODO.id')
       .innerJoin('AGENDAMENTO_GLF_HORARIO', 'AGENDAMENTO_GLF_HISTORICO.id_agendamento_horario', 'AGENDAMENTO_GLF_HORARIO.id')
       .innerJoin('AGENDAMENTO_GLF_BURACO', 'AGENDAMENTO_GLF_HISTORICO.id_agendamento_buraco', 'AGENDAMENTO_GLF_BURACO.id')
+      .orderBy('AGENDAMENTO_GLF_HISTORICO.data_reserva','desc')
       .limit(7) )
 
     for (const key in historico) {
@@ -217,9 +218,9 @@ export default class AgendamentoHistoricoController {
             SELECT @id_historico AS id_historico `) )
 
           if (jogador.id == '1') {
-            var reservaConvidado = ( await Database.rawQuery(`INSERT INTO dbo.AGENDAMENTO_GLF_CONVIDADO
+            await Database.rawQuery(`INSERT INTO dbo.AGENDAMENTO_GLF_CONVIDADO
               (id_agendamento_historico, nome, status, dt_status)
-              VALUES(${reservaParticipante[0].id_historico}, '${jogador.nome}', 'A', GETDATE()) `) )
+              VALUES(${reservaParticipante[0].id_historico}, '${jogador.nome}', 'A', GETDATE()) `)
           }
         }
       }

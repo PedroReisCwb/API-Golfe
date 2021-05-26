@@ -1,11 +1,17 @@
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', () => {
+Route.get('/', async () => {
   return '<BR><BR><BR><CENTER><FONT COLOR="GREEN"><H1>CLUBE CURITIBANO <BR><BR> API AGENDMENTO GOLFE</FONT></H1></CENTER>'
 })
 
 Route.group(() => {
   Route.group(() => {
+
+    // USUARIO
+    Route.group(() => {
+      // Rota para validar token do usuario
+      Route.get(':token','AgendamentoUsuariosController.login')
+    }).prefix('/usuario')
 
     // AGENDA PERÍODO
     Route.group(() => {

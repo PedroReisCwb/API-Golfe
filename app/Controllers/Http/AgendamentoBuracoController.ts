@@ -16,7 +16,7 @@ export default class AgendamentoBuracoController {
 
   public async atualizar({ request, params }) {
     const buraco = await AgendamentoBuraco.findOrFail(params.id);
-    buraco.merge(request.only(['id_agendamento_situacao','numero_buraco','descricao','status']);
+    buraco.merge(request.only(['id_agendamento_situacao','numero_buraco','descricao','status']));
     return await buraco.save();
   }
 }

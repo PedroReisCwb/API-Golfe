@@ -2,7 +2,6 @@
 
 import Database from "@ioc:Adonis/Lucid/Database"
 import AgendamentoConfiguracao from "App/Models/AgendamentoConfiguracao";
-import { DateTime } from "luxon";
 
 export default class AgendamentoConfiguracaoController {
   public async buscar() {

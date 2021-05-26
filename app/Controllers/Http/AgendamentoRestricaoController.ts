@@ -16,7 +16,7 @@ export default class AgendamentoRestricaoController {
 
   public async atualizar({ request, params }) {
     const restricao = await AgendamentoRestricao.findOrFail(params.id);
-    restricao.merge(request.only(['id_agendamento_agenda','id_agendamento_situacao','data_inicio','data_fim','msg_resumida','msg_detalhada','bloquear','status']);
+    restricao.merge(request.only(['id_agendamento_agenda','id_agendamento_situacao','data_inicio','data_fim','msg_resumida','msg_detalhada','bloquear','status']));
     return await restricao.save();
   }
 }

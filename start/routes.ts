@@ -1,7 +1,46 @@
 import Route from '@ioc:Adonis/Core/Route'
+import Redis from '@ioc:Adonis/Addons/Redis'
 
 Route.get('/', async () => {
   return '<BR><BR><BR><CENTER><FONT COLOR="GREEN"><H1>CLUBE CURITIBANO <BR><BR> API AGENDMENTO GOLFE</FONT></H1></CENTER>'
+})
+
+// Rota para recuperar todos os usuarios logados
+Route.get('/agendamentos/golfe/redis/getall', async () => {
+  const lockTimeList: Array<string> = []
+
+  await Redis.keys('GLF-LT-*', function( error, keys ){
+      if( error ){
+          return console.log( error );
+      }
+
+      keys.forEach( function( key ){
+          Redis.get(key, function( err, value: string ){
+              if( err ){
+                  return console.log( err );
+              }
+
+              lockTimeList.push( JSON.parse( value ))
+          });
+      });
+  });
+
+  return lockTimeList
+})
+
+// Rota para limpar cache de usuarios
+Route.get('/agendamentos/golfe/redis/clear/all', async () => {
+  await Redis.keys('GLF-LT-*', function( error, keys ){
+    if( error ){
+      return console.log( error );
+    }
+
+    keys.forEach( function( key ){
+      Redis.del( key )
+    });
+  });
+
+  return 'Finish!'
 })
 
 Route.group(() => {

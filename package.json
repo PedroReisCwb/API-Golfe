@@ -26,10 +26,14 @@
   "dependencies": {
     "@adonisjs/core": "^5.0.4-preview-rc-2.1",
     "@adonisjs/lucid": "^10.0.0",
+    "@adonisjs/redis": "^7.0.5",
     "@adonisjs/repl": "^1.1.6",
+    "@adonisjs/session": "^6.0.5",
+    "@types/socket.io": "^3.0.2",
     "luxon": "^1.26.0",
     "proxy-addr": "^2.0.6",
     "reflect-metadata": "^0.1.13",
+    "socket.io": "^4.1.2",
     "source-map-support": "^0.5.19"
   }
 }

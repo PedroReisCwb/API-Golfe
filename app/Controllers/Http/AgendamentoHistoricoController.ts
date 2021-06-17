@@ -201,11 +201,13 @@ export default class AgendamentoHistoricoController {
         const id_buraco = request.toJSON().body.id_buraco
         const id_equipe = request.toJSON().body.id_equipe
         const id_horario = request.toJSON().body.id_horario
+        const situacao = request.toJSON().body.situacao
+
         if (key == '0') {
           var reservaLider  = ( await Database.rawQuery(`DECLARE @id_historico INT
             INSERT INTO dbo.AGENDAMENTO_GLF_HISTORICO
             (id_agendamento_historico, id_agendamento_agenda, id_agendamento_buraco, id_agendamento_equipe, id_agendamento_horario, id_agendamento_jogador, data_reserva, data_registro, data_acesso, status, dt_status)
-            VALUES(0, ${id_agenda}, ${id_buraco}, ${id_equipe}, ${id_horario}, ${jogador.id}, ${data}, GETDATE(), NULL, 'A', GETDATE())
+            VALUES(0, ${id_agenda}, ${id_buraco}, ${id_equipe}, ${id_horario}, ${jogador.id}, ${data}, GETDATE(), NULL, '${situacao}', GETDATE())
             SET @id_historico = SCOPE_IDENTITY()
             UPDATE AGENDAMENTO_GLF_HISTORICO SET id_agendamento_historico = @id_historico WHERE id = @id_historico
             SELECT @id_historico AS id_historico `) )
@@ -213,7 +215,7 @@ export default class AgendamentoHistoricoController {
           var reservaParticipante  = ( await Database.rawQuery(`DECLARE @id_historico INT
             INSERT INTO dbo.AGENDAMENTO_GLF_HISTORICO
             (id_agendamento_historico, id_agendamento_agenda, id_agendamento_buraco, id_agendamento_equipe, id_agendamento_horario, id_agendamento_jogador, data_reserva, data_registro, data_acesso, status, dt_status)
-            VALUES(${reservaLider[0].id_historico}, ${id_agenda}, ${id_buraco}, ${id_equipe}, ${id_horario}, ${jogador.id}, ${data}, GETDATE(), NULL, 'A', GETDATE())
+            VALUES(${reservaLider[0].id_historico}, ${id_agenda}, ${id_buraco}, ${id_equipe}, ${id_horario}, ${jogador.id}, '${data}', GETDATE(), NULL, ${situacao}, GETDATE())
             SET @id_historico = SCOPE_IDENTITY()
             SELECT @id_historico AS id_historico `) )
 

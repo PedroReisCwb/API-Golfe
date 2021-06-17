@@ -16,6 +16,7 @@ Socket.io.on('connection', socket => {
         await Redis.set(`GLF-LT-${data.id_user}`, JSON.stringify(data), 'ex', expire )
         socket.broadcast.emit('lockList')
         socket.emit('lockList')
+        console.log('User: '+data.id_user)
     })
 
     socket.on('unlockTime', async user => {
